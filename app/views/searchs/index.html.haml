@@ -1,0 +1,21 @@
+.row
+  %span.glyphicon.glyphicon-search
+  .form-group
+    = form_tag searchs_path,class: "form-inline", method: :get do
+      .col-md-6.col-md-offset-4
+        = text_field_tag :query, params[:query], class: "form-control input-lg" 
+        = button_tag class: "btn btn-default btn-lg", type: 'submit', name: nil do
+          %span.glyphicon.glyphicon-search
+- unless @hits.blank?
+  = @response.inspect
+  - @hits.each do |doc|
+    .row
+      .col-md-8.col-md-offset-2
+        - doc.highlight.each do |high|
+          = "#{high.first} #{high[1]}"
+        .description
+          = "category: #{doc['_index']} type: #{doc['_type']}"
+
+
+
+
