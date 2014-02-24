@@ -1,11 +1,15 @@
+.col-md-10
+  %ul.nav.nav-tabs
+    %li.tabtext.active
+      = link_to 'main'
+    - @parent_tabs.each do |tab|
+      %li.tabtext
+        =link_to tab, load_tab_document_path(id: @id, parent: @type, type:  tab),  remote: true
 .row
   .col-md-8.col-md-offset-1
-    %table.table.table-bordered.table-striped
-      %tbody
-        - @source.keys.each  do |key|
-          %tr          
-            %th=key
-            %td=@source[key]
+    #tab-content
+      = render partial: 'main_tab'
+
 
 
 

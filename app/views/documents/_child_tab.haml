@@ -1,0 +1,10 @@
+%table.table.table-bordered.table-striped
+  %thead
+    %tr
+      - @headers.each do |header|
+        %th=header 
+  %tbody
+    - @response.hits.hits.each  do |hit|
+      %tr
+        - @headers.each do |key|
+          %td=hit._source[key]

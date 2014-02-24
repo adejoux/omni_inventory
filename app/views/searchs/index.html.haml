@@ -14,13 +14,15 @@
         = "The request returned #{@response.hits.total} results (#{@response.took.to_f / 1000} seconds)"
   = @response.inspect
   - @response.hits.hits.each do |doc|
-
     .row
       .col-md-8.col-md-offset-1
-        - doc.highlight.each do |high|
-          =link_to "#{high.first} #{high[1].first}", document_path(doc._id)
+        = link_to_doc(doc)
         .description
           = "category: #{doc['_index']} type: #{doc['_type']}"
+        -doc.highlight.each  do |high|
+          .highlight
+            = "#{high.inspect}"
+        
 
 
 
