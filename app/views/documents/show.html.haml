@@ -1,0 +1,12 @@
+.row
+  .col-md-8.col-md-offset-1
+    %table.table.table-bordered.table-striped
+      %tbody
+        - @source.keys.each  do |key|
+          %tr          
+            %th=key
+            %td=@source[key]
+
+
+
+

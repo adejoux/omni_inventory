@@ -2,6 +2,7 @@ OmniInventory::Application.routes.draw do
   resources :users 
   resources :sessions, only: [:new, :create, :destroy]
   resources :searchs, only: [:index]
+  resources :documents, only: [:show]
 
 
   match '/signup', to: 'users#new', via: :get

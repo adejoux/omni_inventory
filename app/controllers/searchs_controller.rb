@@ -5,16 +5,14 @@ class SearchsController < ApplicationController
       client = Elasticsearch::Client.new
       body = build_query(params[:query])
       response = client.search body: body
-      @response=response
-      response = Hashie::Mash.new response
-
-      @hits = response.hits.hits
+      @response = Hashie::Mash.new response
     end
   end
 
   private
   def build_query(search)
     {
+      fields: [],
       query: {
         match: {
           _all: {

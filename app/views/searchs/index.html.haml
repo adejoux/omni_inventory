@@ -1,18 +1,24 @@
+%br
 .row
-  %span.glyphicon.glyphicon-search
   .form-group
     = form_tag searchs_path,class: "form-inline", method: :get do
       .col-md-6.col-md-offset-4
         = text_field_tag :query, params[:query], class: "form-control input-lg" 
         = button_tag class: "btn btn-default btn-lg", type: 'submit', name: nil do
           %span.glyphicon.glyphicon-search
-- unless @hits.blank?
+%br
+- unless @response.blank?
+  .row
+    .col-md-8.col-md-offset-1
+      %p.small
+        = "The request returned #{@response.hits.total} results (#{@response.took.to_f / 1000} seconds)"
   = @response.inspect
-  - @hits.each do |doc|
+  - @response.hits.hits.each do |doc|
+
     .row
-      .col-md-8.col-md-offset-2
+      .col-md-8.col-md-offset-1
         - doc.highlight.each do |high|
-          = "#{high.first} #{high[1]}"
+          =link_to "#{high.first} #{high[1].first}", document_path(doc._id)
         .description
           = "category: #{doc['_index']} type: #{doc['_type']}"
 
