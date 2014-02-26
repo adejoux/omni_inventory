@@ -1,0 +1,20 @@
+= simple_form_for @report do |f|
+  = f.hidden_field :main_index, value: @es_mapping.es_type
+  = f.hidden_field :main_index_fields
+  - if @es_mapping.has_parent?
+    = f.hidden_field :parent_index, value: @es_mapping.parent_type
+    = f.hidden_field :parent_index_fields
+
+  %h1="select fields from  #{@es_mapping.es_type}"
+  .main_fields
+    - @es_mapping.fields.each do |field|
+      .coll_field{name: field}=field
+  - if @es_mapping.has_parent?
+    %h1="select fields from parent type"
+    .parent_fields
+      - @es_mapping.parent_fields.each do |field|
+        .coll_field{name: field}=field
+
+  %h1 create report
+  = f.input_field :name, placeholder: "Name"
+  = f.submit

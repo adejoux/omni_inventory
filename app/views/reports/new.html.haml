@@ -1,0 +1,7 @@
+.row
+  .col-md-10.col-md-offset-1
+    %h1 select collection
+    - @collections.each do |coll|
+      .coll.btn.btn-default= link_to coll, load_fields_report_path(collection: coll), data: { no_turbolink: true }, :remote => true 
+
+    #data_fields

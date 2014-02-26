@@ -11,7 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140220054133) do
+ActiveRecord::Schema.define(version: 20140225214907) do
+
+  create_table "reports", force: true do |t|
+    t.string   "main_index"
+    t.string   "main_index_fields"
+    t.string   "parent_index"
+    t.string   "parent_index_fields"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "name"
+  end
 
   create_table "roles", force: true do |t|
     t.string   "name"
