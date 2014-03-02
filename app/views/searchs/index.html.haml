@@ -12,16 +12,22 @@
     .col-md-8.col-md-offset-1
       %p.small
         = "The request returned #{@response.hits.total} results (#{@response.took.to_f / 1000} seconds)"
-  = @response.inspect
-  - @response.hits.hits.each do |doc|
+  - @paginatable.each do |doc|
     .row
       .col-md-8.col-md-offset-1
-        = link_to_doc(doc)
+        = link_to document_path( get_doc_id(doc) ) do
+          %h3
+            field
+            %b=doc.highlight.first[0]
+            match: 
+            %b=doc.highlight.first[1]
         .description
-          = "category: #{doc['_index']} type: #{doc['_type']}"
-        -doc.highlight.each  do |high|
-          .highlight
-            = "#{high.inspect}"
+          %b category :
+          = doc['_index']
+          %b type :
+          = doc['_type']
+  = paginate @paginatable
+
         
 
 

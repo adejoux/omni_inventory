@@ -1,4 +1,10 @@
 class Report < ActiveRecord::Base
-  serialize :main_index_fields, Array
-  serialize :parent_index_fields, Array
+
+  def main_type_array
+    main_type_fields.split(',')
+  end
+
+  def parent_type_array
+    parent_type_fields.split(',')
+  end 
 end

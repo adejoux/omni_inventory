@@ -14,14 +14,15 @@ class EsMapping
     @mappings.keys
   end
   
-  def get_all_childs(parent)
-    childs = Array.new
-    mappings.each do |mapping|
-      if get_parent_type(type: mapping) == parent
-        childs << mapping
-      end
+  def get_all_child_types(parent)
+    mappings.map do |mapping|
+      next unless get_parent_type(type: mapping) == parent
+      mapping
     end
-    childs
+  end
+
+  def get_child_types(parent)
+    get_all_child_types(parent).compact
   end
 
   def fields

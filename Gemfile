@@ -15,6 +15,7 @@ gem 'haml-rails'
 gem 'elasticsearch'
 gem 'omniauth'
 gem 'omniauth-github'
+gem 'kaminari'
 gem 'rolify'
 gem 'simple_form'
 gem 'therubyracer', :platform=>:ruby

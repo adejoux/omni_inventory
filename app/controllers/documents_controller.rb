@@ -9,7 +9,7 @@ class DocumentsController < ApplicationController
     @type=doc['_type']
 
     es_mapping = EsMapping.new('servers')
-    @tabs = es_mapping.get_all_childs(doc['_type'])
+    @tabs = es_mapping.get_child_types(doc['_type'])
   end
 
   def load_tab

@@ -38,4 +38,11 @@ class ApplicationController < ActionController::Base
     redirect_to root_path, :alert => exception.message
   end
 
+  def offset
+    if params[:page].blank?
+      0
+    else
+      ( params[:page].to_i - 1 ) * 10
+    end
+  end
 end
