@@ -15,15 +15,11 @@ class DocumentsController < ApplicationController
   def load_tab
     es_search = EsQuery.new 
     response = es_search.offset(offset).all_childrens_query(params[:id], params[:parent], params[:type])
-    
     @response = Kaminari.paginate_array(response.hits.hits, limit: 10, offset: offset, total_count: response.hits.total)
-
-    es_mapping = EsMapping.new('servers', es_type: params[:type])
-    @headers = es_mapping.fields
+    @headers = get_headers('servers')
     
     respond_to do |format|
-      format.json { render :json => {:success => true, :html => (render_to_string(partial: 'child_tab', layout: false, :formats => :html ))} }
-      format.html { }
+      format.json { render_partial_json('child_tab') }
     end
   end
 end

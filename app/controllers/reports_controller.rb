@@ -13,7 +13,7 @@ class ReportsController < ApplicationController
     @report=Report.new
     
     respond_to do |format|
-      format.json { render :json => {:success => true, :html => (render_to_string(partial: "data_fields", layout: false, :formats => :html ))} }
+      format.json { render_partial_json('data_fields') }
     end
   end
 
