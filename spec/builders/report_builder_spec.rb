@@ -1,6 +1,19 @@
 require 'spec_helper'
 
 describe ReportBuilder do
+  before(:all) do
+    es_index = EsIndex.new
+    es_index.delete_index :test_index_rspec
+    es_index.create_index :test_index_rspec
+
+    test_file = File.join(Rails.root, 'spec', 'data', 'server.json')
+    
+
+    json = JSON.parse( IO.read(test_file) )
+    es_index.load_data(:test_index_rspec, :servers, json)
+  end
+    
+
   let(:report_builder) { 
     report = FactoryGirl.create(:report)
     ReportBuilder.new(report,0,10)
@@ -23,5 +36,9 @@ describe ReportBuilder do
     end
   end
 
-  
+  describe '.total_records' do
+    it 'should return 1' do
+      expect(report_builder.total_records).to eq(1) 
+    end
+  end
 end

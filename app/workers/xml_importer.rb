@@ -2,22 +2,15 @@ require 'elasticsearch'
 require 'nokogiri'
 
 class XmlImporter
+  attr_reader :es_index, :client, :index
   def initialize(index)
     @index = index
+    @es_index = EsIndex.new
     @client = Elasticsearch::Client.new
   end
 
-  def client
-    @client
-  end
-
-  def index
-    @index
-  end
-
   def data_insert(doc, data_type: "default", parent_id: nil, parent_type: nil)
-
-    build_index(index) unless client.indices.exists index: index
+    es_index.create_index(index) unless client.indices.exists index: index
     update_mapping(data_type, parent_type) if parent_type
     doc_id = SecureRandom.hex(5)
     if parent_id.blank?
@@ -28,39 +21,9 @@ class XmlImporter
     doc_id
   end
 
-  def build_index(index)
-    client.indices.create index: index,
-    body: {
-      settings:{
-        analysis:{
-          analyzer:{
-            default_index:{
-              type:"custom",
-              tokenizer:"standard",
-              filter:[ "lowercase", "ngram" ] 
-            },
-            default_search:{
-              type:"custom",
-              tokenizer:"whitespace",
-              filter:[ "lowercase", "asciifolding" ] 
-            }  
-          },
-          filter:{
-            ngram:{
-              type:"ngram",
-              min_gram:2,
-              max_gram:10
-            }
-          }
-        }
-      }
-    }
-  end
-
   def update_mapping(data_type, parent_type)
-    return unless client.indices.exists index: index
+    return unless es_index.index_exists? index
     result = client.indices.get_mapping index: index
-    puts result.inspect
     mappings = result[index]['mappings']
     
     if mappings[data_type].blank?

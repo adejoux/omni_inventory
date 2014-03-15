@@ -14,7 +14,9 @@ class DocumentsController < ApplicationController
 
   def load_tab
     es_search = EsQuery.new 
-    @response = es_search.all_childrens_query(params[:id], params[:parent], params[:type])
+    response = es_search.offset(offset).all_childrens_query(params[:id], params[:parent], params[:type])
+    
+    @response = Kaminari.paginate_array(response.hits.hits, limit: 10, offset: offset, total_count: response.hits.total)
 
     es_mapping = EsMapping.new('servers', es_type: params[:type])
     @headers = es_mapping.fields

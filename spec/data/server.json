@@ -1,0 +1,6 @@
+{
+  "name": "server1",
+  "customer": "cust1",
+  "os_version": "5300-12-05",
+  "os_type": "AIX"
+}
