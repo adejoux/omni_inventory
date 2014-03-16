@@ -12,7 +12,7 @@ ready =->
       if $('#server_report').length
         $('td:eq(0)', nRow).html( '<a href='+ $(location).attr('href') + '/server_link/'+ aData[0]  + '>' + aData[0] + '</a>' )
     sAjaxSource: $('#report_table').data('source')
-  )
+  ).columnFilter()
   $('.coll').on 'ajax:success', (event,data) ->
     $('#data_fields').html(data.html) if(data.success == true)
     $('.coll').removeClass('active')
@@ -20,13 +20,13 @@ ready =->
   $('body').on 'click', ".coll_field", ->
     $(this).removeClass("coll_field")
     $(this).addClass("coll_field_selected")
-    $('#report_main_index_fields').val(main_field_values)
-    $('#report_parent_index_fields').val(parent_field_values)
+    $('#report_main_type_fields').val(main_field_values)
+    $('#report_parent_type_fields').val(parent_field_values)
   $('body').on 'click', ".coll_field_selected", ->
     $(this).addClass("coll_field")
     $(this).removeClass("coll_field_selected")
-    $('#report_main_index_fields').val(main_field_values)
-    $('#report_parent_index_fields').val(parent_field_values)
+    $('#report_main_type_fields').val(main_field_values)
+    $('#report_parent_type_fields').val(parent_field_values)
 
 main_field_values =->
    $('.main_fields > .coll_field_selected').map( (i,n) ->

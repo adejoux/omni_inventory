@@ -27,6 +27,47 @@ module EsQueryTemplate
       }
     end
 
+    def match_both(main, parent, type)
+      {
+        query: {
+          bool: {
+            must: {
+              match: main
+            },
+            must: {
+              has_parent: {
+                parent_type: type,
+                query: {
+                  match: parent
+                }
+              }
+            }
+          }
+        }
+      }
+    end
+
+    def match_parent(parent, type)
+      {
+        query: {
+          has_parent: {
+            parent_type: type,
+            query: {
+              match: parent
+            }
+          }
+        }
+      }
+    end
+
+    def match_doc(main)
+      {
+        query: {
+          match: main
+        }
+      }
+    end
+
     def child(type, id)
       {
         aggs: {
@@ -47,7 +88,21 @@ module EsQueryTemplate
           }
         }
       }
-      
+    end
+
+    def match_all
+      {
+        query: {
+          match_all: { }
+        },
+        aggs: {
+          parent_list: {
+            terms: { 
+              field: '_parent'
+            }
+          }
+        }
+      }
     end
 
     def search(search)
@@ -57,13 +112,6 @@ module EsQueryTemplate
             _all: {
               query: search,
               operator: 'and'
-            }
-          }
-        },
-        aggs: {
-          parent_list: {
-            terms: { 
-              field: '_parent'
             }
           }
         },
@@ -110,9 +158,8 @@ module EsQueryTemplate
       }
     end
 
-    def parent(parent_ids)
+    def search_by_ids(parent_ids)
       {
-        fields: [:name],
         query: {
           terms: {
             _id: parent_ids
@@ -120,7 +167,5 @@ module EsQueryTemplate
         }
       }
     end
-
-
   end
 end

@@ -1,5 +1,6 @@
 class ReportsController < ApplicationController
   def index
+    @reports = Report.all
   end
 
   def new
@@ -9,7 +10,6 @@ class ReportsController < ApplicationController
 
   def  load_fields
     @es_mapping = EsMapping.new('servers', es_type: params[:collection] )
-    
     @report=Report.new
     
     respond_to do |format|
@@ -32,10 +32,8 @@ class ReportsController < ApplicationController
 
   def show
     @report=Report.find(params[:id])
-
-    @report_builder=ReportBuilder.new(@report, page, per_page)
-    #@report_builder.set_sort(params[:iSortCol_0].to_i,sort_direction)
-    @report_builder.set_search(build_search)
+  
+    @report_builder=ReportBuilder.new(@report, page, per_page, build_search)
     @columns= @report_builder.columns
 
     respond_to do |format|
@@ -47,9 +45,8 @@ class ReportsController < ApplicationController
   end
 
   private
-
   def report_params
-    params.require(:report).permit(:name, :main_index, :main_index_fields, :parent_index, :parent_index_fields)
+    params.require(:report).permit(:name, :main_type, :main_type_fields, :parent_type, :parent_type_fields)
   end
 
   def build_search

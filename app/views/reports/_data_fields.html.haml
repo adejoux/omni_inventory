@@ -1,9 +1,9 @@
 = simple_form_for @report do |f|
-  = f.hidden_field :main_index, value: @es_mapping.es_type
-  = f.hidden_field :main_index_fields
+  = f.hidden_field :main_type, value: @es_mapping.es_type
+  = f.hidden_field :main_type_fields
   - if @es_mapping.has_parent?
-    = f.hidden_field :parent_index, value: @es_mapping.parent_type
-    = f.hidden_field :parent_index_fields
+    = f.hidden_field :parent_type, value: @es_mapping.parent_type
+    = f.hidden_field :parent_type_fields
 
   %h1="select fields from  #{@es_mapping.es_type}"
   .main_fields

@@ -1,2 +1,13 @@
-%h1 Reports#show
-%p Find me in app/views/reports/show.html.haml
+.row
+  .col-md-12
+    %h1="report #{@report.name}"
+    %table{ :id => "report_table", :class => "table table-striped table-bordered", :data => { :source => "#{ report_url(format: "json") }" } }
+      %thead
+        %tr
+          - @columns.each do |column|
+            %th=column
+      %tbody
+      %tfoot
+        %tr
+          - @columns.each do |column|
+            %th=column
