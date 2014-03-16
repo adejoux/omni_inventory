@@ -1,4 +1,4 @@
-class EsQueryTemplate
+module EsQueryTemplate
   class << self
     def document(search)
       {

@@ -2,9 +2,9 @@
   %ul.nav.nav-tabs
     %li.tabtext.active
       = link_to 'main'
-    - @tabs.each do |tab|
+    - @doc.tabs.each do |tab|
       %li.tabtext
-        =link_to tab, load_tab_document_path(id: @id, parent: @type, type:  tab),  remote: true
+        =link_to tab, load_tab_document_path(id: @doc.id, parent: @doc.type, type:  tab),  remote: true
 .row
   .col-md-8.col-md-offset-1
     #tab-content

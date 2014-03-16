@@ -1,6 +1,6 @@
 %table.table.table-bordered.table-striped
   %tbody
-    - @source.keys.each do |key|
+    - @doc.source.keys.each do |key|
       %tr          
         %th=key
-        %td=@source[key]
+        %td=@doc.source[key]

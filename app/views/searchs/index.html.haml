@@ -7,12 +7,12 @@
         = button_tag class: "btn btn-default btn-lg", type: 'submit', name: nil do
           %span.glyphicon.glyphicon-search
 %br
-- unless @response.blank?
+- unless @search.blank?
   .row
     .col-md-8.col-md-offset-1
       %p.small
-        = "The request returned #{@response.hits.total} results (#{@response.took.to_f / 1000} seconds)"
-  - @paginatable.each do |doc|
+        = "The request returned #{@search.total_hits} results (#{@search.total_time} seconds)"
+  - @search.results.each do |doc|
     .row
       .col-md-8.col-md-offset-1
         = link_to document_path( get_doc_id(doc) ) do
@@ -26,7 +26,7 @@
           = doc['_index']
           %b type :
           = doc['_type']
-  = paginate @paginatable
+  = paginate @search.results
 
         
 

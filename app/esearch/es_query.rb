@@ -1,5 +1,7 @@
 class EsQuery
   attr_reader :client
+  include EsQueryTemplate
+  
   def  initialize
     @client = Elasticsearch::Client.new
     @size = 10

@@ -10,11 +10,6 @@ class ApplicationController < ActionController::Base
   def render_partial_json(template)
     render :json => {:success => true, :html => (render_to_string(partial: template, layout: false, :formats => :html ))}
   end
-  
-  def get_headers(index)
-    es_mapping = EsMapping.new(index, es_type: params[:type])
-    es_mapping.fields
-  end
 
   private
     def current_user
