@@ -5,10 +5,7 @@ class ReportFacade < BaseFacade
 
     if ids 
       @response = es_query.search_by_ids(ids, fields)
-    elsif not query.blank?
-      puts query
-      puts query[:parent]
-      puts query[:main]
+    elsif query.present?
       @response = es_query.offset(offset).es_type(type).fields(fields).custom_query(query[:main], query[:parent], 'servers')
     else
       @response = es_query.offset(offset).es_type(type).fields(fields).match_all(fields)
@@ -23,6 +20,7 @@ class ReportFacade < BaseFacade
       result_hash[result._id][:parent] = parent
       result_hash[result._id][:json] = json_fields(result)
     end
+    puts result_hash
     result_hash
   end
 

@@ -18,6 +18,7 @@ puts query
   end
 
   def get_parent_results
+    puts "hereherehere"
     parent_search = ReportFacade.new(0, @report.parent_type, @report.parent_type_array, ids: @search.parent_list)
     parent_search.json_results
   end

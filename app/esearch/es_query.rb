@@ -30,14 +30,18 @@ class EsQuery
   end
 
   def custom_query(main_query, parent_query, parent_type)
-    if main_query.present? && parent_query.present?
-      @body = EsQueryTemplate.match_both(main_query, parent_query, parent_type)
-    elsif parent_query.present?
-      @body = EsQueryTemplate.match_parent(parent_query, parent_type)
-    else
-      @body = EsQueryTemplate.match_doc(main_query)
+    custom = Hash.new{|hash, key| hash[key] = Array.new}
+    main_query ||= {}
+    main_query.each_pair do |key, query|
+      custom[:must] << EsQueryTemplate.match_section({ key => query})
     end
-    puts @body
+    
+    parent_query ||= {}
+    parent_query.each do |key, query|
+      custom[:must_parent] << EsQueryTemplate.has_parent_section({ key => query}, parent_type)
+    end
+    
+    @body = EsQueryTemplate.multi_match(custom[:must] + custom[:must_parent])
     perform_query
   end
 

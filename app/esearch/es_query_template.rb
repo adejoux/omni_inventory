@@ -1,4 +1,5 @@
 module EsQueryTemplate
+  include EsQueryTemplateSection
   class << self
     def document(search)
       {
@@ -12,18 +13,9 @@ module EsQueryTemplate
       }
     end
 
-    def all_childrens(id, parent)
+    def all_childrens(id, type)
       {
-        query: {
-          has_parent: {
-            parent_type: parent,
-            query: {
-              match: {
-                _id: id
-              }
-            }
-          }
-        }
+        query: has_parent_section( {'_id' => id}, type) 
       }
     end
 
@@ -31,42 +23,39 @@ module EsQueryTemplate
       {
         query: {
           bool: {
-            must: {
-              match: main
-            },
-            must: {
-              has_parent: {
-                parent_type: type,
-                query: {
-                  match: parent
-                }
-              }
-            }
+            must: match_section(main),
+            must: has_parent_section(parent, type)
           }
-        }
+        },
+        aggs: parent_list_section
       }
     end
 
-    def match_parent(parent, type)
+    def multi_match(must)
       {
         query: {
-          has_parent: {
-            parent_type: type,
-            query: {
-              match: parent
-            }
+          bool: {
+            must: must
           }
-        }
+        },
+        aggs: parent_list_section
+      }
+    end
+    
+    def match_parent(parent, type)
+      {
+        query: has_parent_section(parent, type),
+        aggs: parent_list_section
       }
     end
 
     def match_doc(main)
       {
-        query: {
-          match: main
-        }
+        query: match_section(main),
+        aggs: parent_list_section
       }
     end
+
 
     def child(type, id)
       {
@@ -77,16 +66,7 @@ module EsQueryTemplate
             }
           }
         },
-        query: {
-          has_parent: {
-            parent_type: type,
-            query: {
-              match: {
-                _id: id
-              }
-            }
-          }
-        }
+        query: has_parent_section( {'_id' => id}, type)
       }
     end
 
@@ -95,13 +75,7 @@ module EsQueryTemplate
         query: {
           match_all: { }
         },
-        aggs: {
-          parent_list: {
-            terms: { 
-              field: '_parent'
-            }
-          }
-        }
+        aggs: parent_list_section
       }
     end
 
@@ -115,13 +89,7 @@ module EsQueryTemplate
             }
           }
         },
-        highlight: {
-          pre_tags: [''],
-          post_tags: [''],
-          fields: {
-            '*' => {}
-          }
-        }
+        highlight: highlight_section
       }
     end
 
