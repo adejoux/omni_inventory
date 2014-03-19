@@ -11,7 +11,7 @@ class ReportsController < ApplicationController
   def  load_fields
     @es_mapping = EsMapping.new('servers', es_type: params[:collection] )
     @report=Report.new
-    
+
     respond_to do |format|
       format.json { render_partial_json('data_fields') }
     end
@@ -32,7 +32,7 @@ class ReportsController < ApplicationController
 
   def show
     @report=Report.find(params[:id])
-  
+
     @report_builder=ReportBuilder.new(@report, page, per_page, build_search)
     @columns= @report_builder.columns
 
@@ -52,6 +52,7 @@ class ReportsController < ApplicationController
   def build_search
     search = {}
     params.select do |key, value|
+      next if value.length < 2
       if matched = key.match(/sSearch_(\d+)/)
         search[ matched[1] ] = value
       end

@@ -1,10 +1,10 @@
 class EsQuery
   attr_reader :client
   include EsQueryTemplate
-  
+
   def  initialize
     @client = Elasticsearch::Client.new
-    @size = 25
+    @size = 20
     @fields = []
     @offset = 0
   end
@@ -13,7 +13,7 @@ class EsQuery
     @type = value
     self
   end
-  
+
   def size(value)
     @size = value
     self
@@ -35,12 +35,12 @@ class EsQuery
     main_query.each_pair do |key, query|
       custom[:must] << EsQueryTemplate.match_section({ key => query})
     end
-    
+
     parent_query ||= {}
     parent_query.each do |key, query|
       custom[:must_parent] << EsQueryTemplate.has_parent_section({ key => query}, parent_type)
     end
-    
+
     @body = EsQueryTemplate.multi_match(custom[:must] + custom[:must_parent])
     perform_query
   end
@@ -49,7 +49,7 @@ class EsQuery
     @body = EsQueryTemplate.search search
     fields(['_parent']).perform_query
   end
-  
+
   def  doc_query(search)
     @body = EsQueryTemplate.document search
     fields(['_source', '_parent']).perform_query
@@ -61,7 +61,9 @@ class EsQuery
   end
 
   def search_by_ids(ids, selected_fields)
-    @body = EsQueryTemplate.search_by_ids
+
+    @body = EsQueryTemplate.search_by_ids ids
+    puts @body
     fields(selected_fields).perform_query
   end
 

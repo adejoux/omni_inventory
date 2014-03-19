@@ -4,9 +4,9 @@ ready =->
     sPaginationType: "bootstrap"
     bProcessing: true
     bServerSide: true
-    iDisplayLength: 25
+    iDisplayLength: 20
     bFilter: true
-    oTableTools: 
+    oTableTools:
       sSwfPath: "http://localhost:3000/dataTables/extras/swf/copy_csv_xls_pdf.swf"
     fnRowCallback: (nRow, aData, iDisplayIndex, iDisplayIndexFull) ->
       if $('#server_report').length
@@ -39,4 +39,4 @@ parent_field_values =->
     ).get()
 
 $(document).ready(ready)
-$(document).on('page:load', ready)    
+$(document).on('page:load', ready)

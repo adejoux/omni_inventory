@@ -31,6 +31,7 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'rspec-rails'
   gem 'thin'
+  gem 'dotenv-rails'
 end
 group :production do
   gem 'puma'

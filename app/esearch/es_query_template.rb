@@ -15,19 +15,7 @@ module EsQueryTemplate
 
     def all_childrens(id, type)
       {
-        query: has_parent_section( {'_id' => id}, type) 
-      }
-    end
-
-    def match_both(main, parent, type)
-      {
-        query: {
-          bool: {
-            must: match_section(main),
-            must: has_parent_section(parent, type)
-          }
-        },
-        aggs: parent_list_section
+        query: has_parent_section( {'_id' => id}, type)
       }
     end
 
@@ -37,31 +25,15 @@ module EsQueryTemplate
           bool: {
             must: must
           }
-        },
-        aggs: parent_list_section
+        }
       }
     end
-    
-    def match_parent(parent, type)
-      {
-        query: has_parent_section(parent, type),
-        aggs: parent_list_section
-      }
-    end
-
-    def match_doc(main)
-      {
-        query: match_section(main),
-        aggs: parent_list_section
-      }
-    end
-
 
     def child(type, id)
       {
         aggs: {
           child_types: {
-            terms: { 
+            terms: {
               field: '_type'
             }
           }
@@ -74,8 +46,7 @@ module EsQueryTemplate
       {
         query: {
           match_all: { }
-        },
-        aggs: parent_list_section
+        }
       }
     end
 
@@ -93,44 +64,11 @@ module EsQueryTemplate
       }
     end
 
-    def search_all(search)
-      {
-
-        filter: {
-          or: [
-            {
-              query: {
-                match: {
-                  _all: {
-                    query: search,
-                    operator: 'and'
-                  }
-                }
-              }
-            },
-            {
-              has_child: {
-                type: "lsdf",
-                query: {
-                  match: {
-                    _all: {
-                      query: search,
-                      operator: 'and'
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        }
-      }
-    end
-
     def search_by_ids(parent_ids)
       {
         query: {
-          terms: {
-            _id: parent_ids
+          ids: {
+            values: parent_ids
           }
         }
       }
