@@ -9,13 +9,13 @@ class XmlImporter
   end
 
   def data_insert(doc, data_type: "default", parent_id: nil, parent_type: nil)
-    es_index.create_index(index) 
-    update_mapping(data_type, parent_type) if parent_type
+    es_index.create_index(index)
+    es_index.update_mapping(index, data_type, parent_type) if parent_type
     doc_id = SecureRandom.hex(5)
     if parent_id.blank?
       es_index.index_data(index, doc_id, data_type, doc)
     else
-      es_index.index_data(index, doc_id, data_type, doc, parent_id)
+      es_index.index_data_with_parent(index, doc_id, data_type, doc, parent_id)
     end
     doc_id
   end
@@ -25,16 +25,16 @@ class XmlImporter
       process_data(data[data.keys.first], data_type: data_type, parent_id: parent_id,parent_type: parent_type )
       return
     end
-    
+
     if data.is_a? Hash
       process_hash(data, parent_id,  data_type, parent_type)
-    elsif data.is_a? Array 
+    elsif data.is_a? Array
       process_array(data, parent_id, data_type, parent_type)
     end
   end
 
   def process_hash(data, parent_id, data_type, parent_type)
-    puts "hash parent_id #{parent_id.inspect} data_type: #{data_type} parent_type: #{parent_type}\ndata: #{data.inspect}"
+    #puts "hash parent_id #{parent_id.inspect} data_type: #{data_type} parent_type: #{parent_type}\ndata: #{data.inspect}"
 
     if data.keys.count == 1
       process_data(data[data.keys.first], data_type: data_type, parent_id: parent_id,parent_type: parent_type )
@@ -64,13 +64,13 @@ class XmlImporter
   end
 
   def  process_array(data, parent_id, data_type, parent_type)
-    puts "array parent_id #{parent_id.inspect} data_type: #{data_type} parent_type: #{parent_type}\ndata: #{data.inspect}"
+    #puts "array parent_id #{parent_id.inspect} data_type: #{data_type} parent_type: #{parent_type}\ndata: #{data.inspect}"
 
     doc={}
     array=[]
     index=0
     data.each do |element|
-      if element.class == Hash 
+      if element.class == Hash
         process_hash(element, parent_id, data_type, parent_type)
       elsif element.class  == Array
         process_array(element, parent_id, data_type, parent_type)

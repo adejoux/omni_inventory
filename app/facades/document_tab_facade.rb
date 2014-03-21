@@ -2,8 +2,9 @@ class DocumentTabFacade < BaseFacade
   def initialize(offset, doc_id, parent, type)
     @offset=offset
     @type=type
-    es_search = EsQuery.new 
+    es_search = EsQuery.new
     @response = es_search.offset(offset).all_childrens_query(doc_id, parent, type)
+    puts @response
   end
 
   def headers

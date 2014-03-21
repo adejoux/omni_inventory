@@ -79,6 +79,7 @@ class EsQuery
 
   def all_childrens_query(id, parent, type)
     @body = EsQueryTemplate.all_childrens(id, parent)
+    puts @body
     fields(['_source']).es_type(type).perform_query
   end
 
