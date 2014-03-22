@@ -1,0 +1,24 @@
+%p#notice= notice
+
+%p
+  %b Data dir:
+  = @importer.data_dir
+%p
+  %b Backup dir:
+  = @importer.backup_dir
+%p
+  %b Error dir:
+  = @importer.error_dir
+%p
+  %b File delete:
+  = @importer.file_delete
+%p
+  %b Importer type:
+  = @importer.importer_type
+%p
+  %b Index name:
+  = @importer.index_name
+
+= link_to 'Edit', edit_importer_path(@importer)
+\|
+= link_to 'Back', importers_path

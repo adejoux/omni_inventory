@@ -11,7 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140302125733) do
+ActiveRecord::Schema.define(version: 20140322111810) do
+
+  create_table "importers", force: true do |t|
+    t.string   "data_dir"
+    t.string   "backup_dir"
+    t.string   "error_dir"
+    t.boolean  "file_delete"
+    t.string   "importer_type"
+    t.string   "index_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "unique_fields_list"
+  end
 
   create_table "reports", force: true do |t|
     t.string   "main_type"

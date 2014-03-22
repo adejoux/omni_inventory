@@ -1,4 +1,5 @@
 class Report < ActiveRecord::Base
+  validates_presence_of :name, :main_type, :main_type_fields
 
   def main_type_array
     main_type_fields.split(',')

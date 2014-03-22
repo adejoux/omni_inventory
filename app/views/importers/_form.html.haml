@@ -1,0 +1,15 @@
+= simple_form_for(@importer) do |f|
+  = f.error_notification
+
+  .form-inputs
+    = f.input :data_dir
+    = f.input :backup_dir
+    = f.input :error_dir
+    = f.input :file_delete
+    = f.input :importer_type
+    = f.input :index_name
+    = f.label 'unique fields'
+    = text_field_tag 'importer[unique_fields_list][]', nil, id: 'unique_field_1'
+
+  .form-actions
+    = f.button :submit

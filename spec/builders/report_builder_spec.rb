@@ -16,7 +16,7 @@ describe ReportBuilder do
 
   let(:report_builder) { 
     report = FactoryGirl.create(:report)
-    ReportBuilder.new(report,0,10)
+    ReportBuilder.new(report,1,10, {})
   }
 
   it 'should return a ReportBuilder instance' do

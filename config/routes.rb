@@ -1,4 +1,6 @@
 OmniInventory::Application.routes.draw do
+  resources :importers
+
   resources :users 
   resources :sessions, only: [:new, :create, :destroy]
   resources :searchs, only: [:index]
