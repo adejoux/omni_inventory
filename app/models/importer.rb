@@ -6,5 +6,11 @@ class Importer < ActiveRecord::Base
   validates :unique_fields_list, array: true
   validates_inclusion_of :importer_type, in: IMPORT_TYPES
 
-  
+  def self.import_types
+    IMPORT_TYPES
+  end
+
+  def files
+    Dir.entries(data_dir).select{|x| x.end_with?(importer_type)}
+  end  
 end

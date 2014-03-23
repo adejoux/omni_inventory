@@ -58,8 +58,13 @@ class EsIndex
 
   def update_mapping(index, data_type, parent_type)
     return unless index_exists? index
+    return if parent_type.blank?
     result = client.indices.get_mapping index: index
-    mappings = result[index]['mappings']
+    begin
+      mappings = result[index]['mappings']
+    rescue
+      mappings = {}
+    end
 
     if mappings[data_type].blank?
       body={ data_type => { "_parent" => { "type" => parent_type } } }

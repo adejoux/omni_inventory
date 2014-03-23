@@ -18,6 +18,9 @@ gem 'omniauth-github'
 gem 'kaminari'
 gem 'rolify'
 gem 'simple_form'
+gem 'clockwork'
+gem 'delayed_job_active_record'
+gem 'foreman'
 gem 'therubyracer', :platform=>:ruby
 group :development do
   gem 'guard'
