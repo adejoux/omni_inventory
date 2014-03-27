@@ -1,28 +1,29 @@
 %h1 Listing importers
 
-%table
-  %tr
-    %th Data dir
-    %th Backup dir
-    %th Error dir
-    %th File delete
-    %th Importer type
-    %th Index name
-    %th
-    %th
-    %th
-
-  - @importers.each do |importer|
+%table.table.table-bordered
+  %thead
     %tr
-      %td= importer.data_dir
-      %td= importer.backup_dir
-      %td= importer.error_dir
-      %td= importer.file_delete
-      %td= importer.importer_type
-      %td= importer.index_name
-      %td= link_to 'Show', importer
-      %td= link_to 'Edit', edit_importer_path(importer)
-      %td= link_to 'Destroy', importer, :method => :delete, :data => { :confirm => 'Are you sure?' }
+      %th Data dir
+      %th Backup dir
+      %th Error dir
+      %th File delete
+      %th Importer type
+      %th Index name
+      %th
+      %th
+      %th
+  %tbody
+    - @importers.each do |importer|
+      %tr
+        %td= importer.data_dir
+        %td= importer.backup_dir
+        %td= importer.error_dir
+        %td= importer.file_delete
+        %td= importer.importer_type
+        %td= importer.index_name
+        %td= link_to 'Show', importer
+        %td= link_to 'Edit', edit_importer_path(importer)
+        %td= link_to 'Destroy', importer, :method => :delete, :data => { :confirm => 'Are you sure?' }
 
 %br
 

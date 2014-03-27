@@ -1,12 +1,13 @@
 class ImportDocument
-  attr_accessor :data_type, :parent_id, :parent_type, :routing
+  attr_accessor :data_type, :parent_id, :parent_type, :routing_id, :grand_parent_type
   attr_reader :data
-  def initialize(data: nil, data_type: "default", parent_id: nil, parent_type: nil, routing: nil)
+  def initialize(data: nil, data_type: "default", parent_id: nil, parent_type: nil, routing_id: nil, grand_parent_type: nil)
     @data = data
     @data_type = data_type
     @parent_id =  parent_id
     @parent_type = parent_type
-    @routing = routing
+    @grand_parent_type = grand_parent_type
+    @routing_id = routing_id
   end
 
   def first_key
@@ -26,15 +27,25 @@ class ImportDocument
     @data = toto
   end
 
+  def previous_document
+    puts "previous: data_type: #{data_type} parent_type: #{parent_type}"
+    return if data.class == Array
+    @data_type = parent_type
+    @parent_type = grand_parent_type
+    puts "after: #{object_id} data_type: #{data_type} parent_type: #{parent_type}"
+  end
 
-
-  def new_document(key, id)
-    routing_id = parent_id unless id == parent_id
-    puts data.inspect
+  def new_document(key, new_id)
+    new_routing = parent_id unless new_id == parent_id
+ puts "AFTER IN: #{data_type} #{parent_type} #{grand_parent_type}"
     if key.class == Hash
-      ImportDocument.new(data: key, data_type: data_type, parent_id: parent_id, parent_type: parent_type, routing: routing )
+      puts "hash"
+      ImportDocument.new(data: key, data_type: data_type, parent_id: parent_id, parent_type: parent_type, routing_id: routing_id )
     else
-      ImportDocument.new(data: data[key], data_type: key, parent_id: id, parent_type: data_type, routing: routing_id )
+
+      @grand_parent_type = parent_type
+      puts "#{object_id} key #{key} parent_type: #{parent_type} #{data_type}"
+      ImportDocument.new(data: data[key], data_type: key, parent_id: new_id, parent_type: data_type, routing_id: new_routing, grand_parent_type: grand_parent_type )
     end
   end
 end

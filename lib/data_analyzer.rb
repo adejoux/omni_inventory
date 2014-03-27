@@ -7,7 +7,6 @@ class DataAnalyzer
 
   def self.build(data)
     type = "#{data.class}_data_analyzer".camelize.to_sym
-    puts type
     const_get(type).new(data)
   end
 
@@ -26,7 +25,7 @@ class DataAnalyzer
   def empty?
     results.empty?
   end
- 
+
   private
   def parse_data
     raise NotImplementedError.new("need to be implemented in child class !")

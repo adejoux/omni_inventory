@@ -27,7 +27,6 @@ class ReportBuilder
         main_value(key)
       else
         parent_id = main_results[key][:parent]
-                puts "id: #{parent_id}"
         result_key = parent_results[parent_id]
         main_value(key) + parent_value(parent_id)
       end

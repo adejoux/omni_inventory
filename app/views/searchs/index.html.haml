@@ -3,7 +3,7 @@
   .form-group
     = form_tag searchs_path,class: "form-inline", method: :get do
       .col-md-6.col-md-offset-4
-        = text_field_tag :query, params[:query], class: "form-control input-lg" 
+        = text_field_tag :query, params[:query], class: "form-control input-lg"
         = button_tag class: "btn btn-default btn-lg", type: 'submit', name: nil do
           %span.glyphicon.glyphicon-search
 %br
@@ -12,6 +12,7 @@
     .col-md-8.col-md-offset-1
       %p.small
         = "The request returned #{@search.total_hits} results (#{@search.total_time} seconds)"
+      = paginate @search.results
   - @search.results.each do |doc|
     .row
       .col-md-8.col-md-offset-1
@@ -19,16 +20,18 @@
           %h3
             field
             %b=doc.highlight.first[0]
-            match: 
+            match:
             %b=doc.highlight.first[1].first
         .description
           %b category :
           = doc['_index']
           %b type :
           = doc['_type']
-  = paginate @search.results
+  .row
+    .col-md-8.col-md-offset-1
+      = paginate @search.results
 
-        
+
 
 
 

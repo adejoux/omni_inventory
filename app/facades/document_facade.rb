@@ -1,12 +1,12 @@
 class DocumentFacade
   def initialize(id)
-    es_search = EsQuery.new 
+    es_search = EsQuery.new
     response = es_search.doc_query(id)
     @doc = response['hits']['hits'].first
   end
 
   def tabs
-    es_mapping = EsMapping.new('servers')
+    es_mapping = EsMapping.new(@doc['_index'])
     es_mapping.get_child_types(@doc['_type'])
   end
 
@@ -22,4 +22,7 @@ class DocumentFacade
     @doc['_type']
   end
 
+  def index
+    @doc['_index']
+  end
 end

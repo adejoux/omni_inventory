@@ -4,7 +4,7 @@
       = link_to 'main'
     - @doc.tabs.each do |tab|
       %li.tabtext
-        =link_to tab, load_tab_document_path(id: @doc.id, parent: @doc.type, type:  tab),  remote: true
+        =link_to tab, load_tab_document_path(id: @doc.id, parent: @doc.type, type:  tab, index: @doc.index),  remote: true
 .row
   .col-md-8.col-md-offset-1
     #tab-content
