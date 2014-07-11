@@ -11,7 +11,6 @@
       %th Index name
       %th
       %th
-      %th
   %tbody
     - @importers.each do |importer|
       %tr
@@ -21,9 +20,11 @@
         %td= importer.file_delete
         %td= importer.importer_type
         %td= importer.index_name
-        %td= link_to 'Show', importer
-        %td= link_to 'Edit', edit_importer_path(importer)
-        %td= link_to 'Destroy', importer, :method => :delete, :data => { :confirm => 'Are you sure?' }
+        %td= link_to 'Run', run_importer_path(importer)
+        %td
+          = link_to 'Show', importer
+          = link_to 'Edit', edit_importer_path(importer)
+          = link_to 'Destroy', importer, :method => :delete, :data => { :confirm => 'Are you sure?' }
 
 %br
 

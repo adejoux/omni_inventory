@@ -1,5 +1,5 @@
 class ImportersController < ApplicationController
-  before_action :set_importer, only: [:show, :edit, :update, :destroy]
+  before_action :set_importer, only: [:show, :edit, :update, :destroy, :run]
 
   # GET /importers
   # GET /importers.json
@@ -21,6 +21,14 @@ class ImportersController < ApplicationController
   def edit
   end
 
+  def run
+    @importer.delay.import
+    redirect_to importers_path, :flash => { :success => "Import started ! #{view_context.link_to("Imports status", importers_path)}".html_safe }
+  end
+
+  def status
+
+  end
   # POST /importers
   # POST /importers.json
   def create

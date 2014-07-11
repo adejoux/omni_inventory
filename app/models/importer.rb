@@ -12,5 +12,17 @@ class Importer < ActiveRecord::Base
 
   def files
     Dir.entries(data_dir).select{|x| x.end_with?(importer_type)}
-  end  
+  end
+
+  def import
+    files.each do |file|
+      puts "processing file #{file} \n"
+      di=DataImporter.build(self, file)
+      begin
+        di.perform
+      rescue => e
+        puts "ERROR: unable to process file #{e.message}"
+      end
+    end
+  end
 end

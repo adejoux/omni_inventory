@@ -28,23 +28,18 @@ class ImportDocument
   end
 
   def previous_document
-    puts "previous: data_type: #{data_type} parent_type: #{parent_type}"
     return if data.class == Array
     @data_type = parent_type
     @parent_type = grand_parent_type
-    puts "after: #{object_id} data_type: #{data_type} parent_type: #{parent_type}"
   end
 
   def new_document(key, new_id)
     new_routing = parent_id unless new_id == parent_id
- puts "AFTER IN: #{data_type} #{parent_type} #{grand_parent_type}"
     if key.class == Hash
-      puts "hash"
       ImportDocument.new(data: key, data_type: data_type, parent_id: parent_id, parent_type: parent_type, routing_id: routing_id )
     else
 
       @grand_parent_type = parent_type
-      puts "#{object_id} key #{key} parent_type: #{parent_type} #{data_type}"
       ImportDocument.new(data: data[key], data_type: key, parent_id: new_id, parent_type: data_type, routing_id: new_routing, grand_parent_type: grand_parent_type )
     end
   end
