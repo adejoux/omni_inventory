@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
-ruby '2.1.1'
-gem 'rails', '4.0.2'
+ruby '2.1.2'
+gem 'rails', '4.0.5'
 gem 'sqlite3'
 gem 'sass-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
@@ -22,6 +22,8 @@ gem 'clockwork'
 gem 'delayed_job_active_record'
 gem 'foreman'
 gem 'therubyracer', :platform=>:ruby
+gem 'carrierwave'
+gem 'axlsx'
 group :development do
   gem 'guard'
   gem 'guard-rspec'

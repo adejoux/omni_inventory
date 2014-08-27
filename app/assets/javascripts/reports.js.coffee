@@ -1,7 +1,7 @@
 ready =->
   dTable = $('#report_table').dataTable(
     sDom: "<'row'<'col-xs-6'T><'col-xs-6'>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>"
-    sPaginationType: "bootstrap"
+    sPaginationType: "full_numbers"
     bProcessing: true
     bServerSide: true
     iDisplayLength: 20
