@@ -1,9 +1,16 @@
-class ReportBuilder
+class BatchBuilder
   def initialize(report, query, offset: 0)
     @report = report
+    @client = Elasticsearch::Client.new
     set_search(query)
 
-    @search = ReportFacade.new(offset, report.main_type, report.main_type_array, query: search_criterias)
+    es_query = EsQuery.new
+
+    if search_criterias.present?
+      @scroll = es_query.es_type(report.main_type).fields(fields + ['_parent']).custom_query(search_criterias[:main], search_criterias[:parent], 'servers', scan: true)
+    else
+      @scroll = es_query.es_type(report.main_type).fields(report.main_type_array).match_all(report.main_type_array, scan: true)
+    end
   end
 
   def main_results
@@ -19,16 +26,25 @@ class ReportBuilder
     parent_search.json_results
   end
 
-  def data
-    main_results.map do |key, value|
-      if main_results[key][:parent].blank?
-        main_value(key)
-      else
-        parent_id = main_results[key][:parent]
-        result_key = parent_results[parent_id]
-        main_value(key) + parent_value(parent_id)
+  def each_data
+    while @scroll = @client.scroll(scroll_id: @scroll['_scroll_id'], scroll: '5m') and not @scroll['hits']['hits'].empty? do
+      @search = BatchFacade.new((Hashie::Mash.new @scroll), @report.main_type_array)
+      @main_results=nil
+      @parent_results=nil
+      results=[]
+      main_results.map do |key, value|
+        if main_results[key][:parent].blank?
+          results += [main_value(key)]
+        else
+          parent_id = main_results[key][:parent]
+          result_key = parent_results[parent_id]
+          results += [main_value(key) + parent_value(parent_id)]
+        end
       end
+      puts results.count
+      yield results
     end
+
   end
 
   def main_value(key)

@@ -29,7 +29,7 @@ class EsQuery
     self
   end
 
-  def custom_query(main_query, parent_query, parent_type)
+  def custom_query(main_query, parent_query, parent_type, scan: false)
     custom = Hash.new{|hash, key| hash[key] = Array.new}
     main_query ||= {}
     main_query.each_pair do |key, query|
@@ -42,7 +42,11 @@ class EsQuery
     end
 
     @body = EsQueryTemplate.multi_match(custom[:must] + custom[:must_parent])
-    perform_query
+    if scan
+      perform_scan_query
+    else
+      perform_query
+    end
   end
 
   def search_query(search)
@@ -55,15 +59,18 @@ class EsQuery
     fields(['_source', '_parent']).perform_query
   end
 
-  def match_all(selected_fields)
+  def match_all(selected_fields, scan: false)
     @body = EsQueryTemplate.match_all
-    fields(selected_fields + ['_parent'] ).perform_query
+    if scan
+      fields(selected_fields + ['_parent'] ).perform_scan_query
+    else
+      fields(selected_fields + ['_parent'] ).perform_query
+    end
   end
 
   def search_by_ids(ids, selected_fields)
 
     @body = EsQueryTemplate.search_by_ids ids
-    puts @body
     fields(selected_fields).perform_query
   end
 
@@ -79,7 +86,6 @@ class EsQuery
 
   def all_childrens_query(id, parent, type)
     @body = EsQueryTemplate.all_childrens(id, parent)
-    puts @body
     fields(['_source']).es_type(type).perform_query
   end
 
@@ -90,5 +96,13 @@ class EsQuery
       response = client.search size: @size, from: @offset, fields: @fields, body: @body
     end
     Hashie::Mash.new response
+  end
+
+  def perform_scan_query
+    if @type
+      client.search search_type: 'scan', scroll: '5m', size: @size, fields: @fields, type: @type, body: @body
+    else
+      client.search search_type: 'scan', scroll: '5m', size: @size, fields: @fields, body: @body
+    end
   end
 end

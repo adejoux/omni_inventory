@@ -33,7 +33,7 @@ class ReportsController < ApplicationController
   def show
     @report=Report.find(params[:id])
 
-    @report_builder=ReportBuilder.new(@report, page, per_page, build_search)
+    @report_builder=ReportBuilder.new(@report, build_search, offset: offset)
     @columns= @report_builder.columns
 
     respond_to do |format|
@@ -44,9 +44,18 @@ class ReportsController < ApplicationController
     end
   end
 
+  def export
+    @report=Report.find(params[:id])
+    Exporter.process(@report, build_search)
+  end
+
   private
   def report_params
     params.require(:report).permit(:name, :main_type, :main_type_fields, :parent_type, :parent_type_fields)
+  end
+
+  def offset
+    (page - 1) * per_page
   end
 
   def build_search
