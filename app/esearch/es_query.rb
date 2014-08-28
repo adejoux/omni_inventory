@@ -2,11 +2,13 @@ class EsQuery
   attr_reader :client
   include EsQueryTemplate
 
-  def  initialize
+  def  initialize(fields: [], offset: 0, size: 20, type: nil, scan: false)
     @client = Elasticsearch::Client.new
-    @size = 20
-    @fields = []
-    @offset = 0
+    @size = size
+    @fields = fields
+    @offset = offset
+    @type = type
+    @scan = scan
   end
 
   def es_type(value)
@@ -29,7 +31,7 @@ class EsQuery
     self
   end
 
-  def custom_query(main_query, parent_query, parent_type, scan: false)
+  def custom_query(main_query, parent_query, parent_type)
     custom = Hash.new{|hash, key| hash[key] = Array.new}
     main_query ||= {}
     main_query.each_pair do |key, query|
@@ -42,7 +44,7 @@ class EsQuery
     end
 
     @body = EsQueryTemplate.multi_match(custom[:must] + custom[:must_parent])
-    if scan
+    if @scan
       perform_scan_query
     else
       perform_query
@@ -59,9 +61,9 @@ class EsQuery
     fields(['_source', '_parent']).perform_query
   end
 
-  def match_all(selected_fields, scan: false)
+  def match_all(selected_fields)
     @body = EsQueryTemplate.match_all
-    if scan
+    if @scan
       fields(selected_fields + ['_parent'] ).perform_scan_query
     else
       fields(selected_fields + ['_parent'] ).perform_query

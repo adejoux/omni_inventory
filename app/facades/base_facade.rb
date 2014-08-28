@@ -1,4 +1,9 @@
 class BaseFacade
+  def initialize(response, fields)
+    @response = response
+    @fields = fields
+  end
+
   def total_hits
     @response.hits.total
   end
@@ -8,7 +13,11 @@ class BaseFacade
   end
 
   def results
-    Kaminari.paginate_array(@response.hits.hits, limit: 10, offset: @offset, total_count: total_hits)
+    @response.hits.hits
+  end
+
+  def paginated_results(limit: 10)
+    Kaminari.paginate_array(@response.hits.hits, limit: limit, offset: @offset, total_count: total_hits)
   end
 
   def json_results

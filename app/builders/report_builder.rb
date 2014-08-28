@@ -3,7 +3,12 @@ class ReportBuilder
     @report = report
     set_search(query)
 
-    @search = ReportFacade.new(offset, report.main_type, report.main_type_array, query: search_criterias)
+    response = QueryBuilder.paginated_report(offset: offset,
+                                             type: report.main_type,
+                                             fields: report.main_type_array,
+                                             query: search_criterias)
+
+    @search = BaseFacade.new(response, report.main_type_array)
   end
 
   def main_results
@@ -15,7 +20,8 @@ class ReportBuilder
   end
 
   def get_parent_results
-    parent_search = ReportIdFacade.new(@report.parent_type, @report.parent_type_array, @search.parent_list)
+    response = QueryBuilder.fields_by_ids(fields: @report.parent_type_array, ids: @search.parent_list)
+    parent_search = BaseFacade.new(response, @search.parent_list)
     parent_search.json_results
   end
 
