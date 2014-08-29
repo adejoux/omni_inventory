@@ -42,7 +42,7 @@ class SearchResultFacade
   end
 
   def parent_list
-    @response.hits.hits.map { |hit| hit.fields._parent }.uniq
+    @response.hits.hits.map { |hit|  hit.fields._parent if hit.fields.present? }.uniq.compact
   end
 
   private

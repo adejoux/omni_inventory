@@ -24,6 +24,7 @@ gem 'foreman'
 gem 'therubyracer', :platform=>:ruby
 gem 'carrierwave'
 gem 'axlsx'
+gem "font-awesome-rails"
 group :development do
   gem 'guard'
   gem 'guard-rspec'
