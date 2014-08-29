@@ -8,7 +8,14 @@ class DocumentsController < ApplicationController
   end
 
   def load_tab
-    @tab = DocumentTabFacade.new(offset, params[:index], params[:id], params[:parent], params[:type])
+    @tab = QueryBuilder.get_tab(offset: offset,
+                                    doc_id: params[:id],
+                                    parent: params[:parent],
+                                    type: params[:type])
+
+    @headers = QueryBuilder.get_headers(index: params[:index],
+                                        type: params[:type])
+
 
     respond_to do |format|
       format.json { render_partial_json('child_tab') }

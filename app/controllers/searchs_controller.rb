@@ -1,7 +1,7 @@
 class SearchsController < ApplicationController
   def index
     if params[:query].present?
-      @search = SearchFacade.new(offset, params[:query])
+      @search = QueryBuilder.search(offset: offset, query: params[:query])
     end
-  end 
+  end
 end

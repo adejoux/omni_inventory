@@ -1,6 +1,6 @@
 class Exporter
   def self.process(report, search)
-    report_builder=BatchBuilder.new(report, search)
+    report_builder=ReportBuilder.new(report, search, scan: true)
 
     xlsx_package = Axlsx::Package.new
     wb = xlsx_package.workbook

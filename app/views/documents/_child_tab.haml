@@ -1,11 +1,11 @@
 %table.table.table-bordered.table-striped
   %thead
     %tr
-      - @tab.headers.each do |header|
-        %th=header 
+      - @headers.each do |header|
+        %th=header
   %tbody
     - @tab.results.each  do |hit|
       %tr
-        - @tab.headers.each do |key|
+        - @headers.each do |key|
           %td=hit._source[key]
 = paginate @tab.results, remote: true

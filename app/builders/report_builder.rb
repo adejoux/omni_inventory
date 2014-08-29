@@ -1,14 +1,19 @@
 class ReportBuilder
-  def initialize(report, query, offset: 0)
+  def initialize(report, query, offset: 0, scan: false)
     @report = report
+    @scan = scan
     set_search(query)
 
-    response = QueryBuilder.paginated_report(offset: offset,
-                                             type: report.main_type,
-                                             fields: report.main_type_array,
-                                             query: search_criterias)
-
-    @search = BaseFacade.new(response, report.main_type_array)
+    if @scan
+      @scroll =  QueryBuilder.report(type: report.main_type,
+                                   fields: report.main_type_array,
+                                   query: search_criterias)
+    else
+      @search = QueryBuilder.paginated_report(offset: offset,
+                                               type: report.main_type,
+                                               fields: report.main_type_array,
+                                               query: search_criterias)
+    end
   end
 
   def main_results
@@ -20,12 +25,12 @@ class ReportBuilder
   end
 
   def get_parent_results
-    response = QueryBuilder.fields_by_ids(fields: @report.parent_type_array, ids: @search.parent_list)
-    parent_search = BaseFacade.new(response, @search.parent_list)
+    parent_search = QueryBuilder.fields_by_ids(fields: @report.parent_type_array, ids: @search.parent_list)
     parent_search.json_results
   end
 
   def data
+    return unless @search
     main_results.map do |key, value|
       if main_results[key][:parent].blank?
         main_value(key)
@@ -34,6 +39,27 @@ class ReportBuilder
         result_key = parent_results[parent_id]
         main_value(key) + parent_value(parent_id)
       end
+    end
+  end
+
+  def each_data
+    return unless @scroll
+    QueryBuilder.scrolling(@scroll) do |response|
+      @search = SearchResultFacade.new((Hashie::Mash.new response), fields: @report.main_type_array, limit: false)
+      @main_results=nil
+      @parent_results=nil
+      results=[]
+      main_results.map do |key, value|
+        if main_results[key][:parent].blank?
+          results += [main_value(key)]
+        else
+          parent_id = main_results[key][:parent]
+          result_key = parent_results[parent_id]
+          results += [main_value(key) + parent_value(parent_id)]
+        end
+      end
+      puts results.count
+      yield results
     end
   end
 
