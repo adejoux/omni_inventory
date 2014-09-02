@@ -52,8 +52,10 @@ class EsQuery
   end
 
   def search_query(search)
+
+    primary_fields = YAML.load(ENV['PRIMARY_FIELDS']).map { |field| field }
     @body = EsQueryTemplate.search search
-    fields(['_parent']).perform_query
+    fields(['_parent'] + primary_fields).perform_query
   end
 
   def  doc_query(search)

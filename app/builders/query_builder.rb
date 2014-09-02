@@ -1,10 +1,10 @@
 class QueryBuilder
-  def self.fields_by_ids(fields: [], ids: [])
+  def fields_by_ids(fields: [], ids: [])
     es_query = EsQuery.new(size: ids.count)
     formatted es_query.search_by_ids(ids, fields), fields: fields
   end
 
-  def self.paginated_report(offset: offset, fields: fields, type: type, query: query)
+  def paginated_report(offset: 0, fields: [], type: nil, query: nil)
     es_query = EsQuery.new(offset: offset,
                            fields: fields + ['_parent'],
                            type: type )
@@ -16,7 +16,7 @@ class QueryBuilder
     end
   end
 
-  def self.report(fields: fields, type: type, query: query)
+  def report(fields: [], type: nil, query: nil)
     es_query = EsQuery.new(scan: true, type: type )
 
     if query.present?
@@ -26,30 +26,30 @@ class QueryBuilder
     end
   end
 
-  def self.scrolling(scroll)
+  def scrolling(scroll)
     client = Elasticsearch::Client.new
     while scroll = client.scroll(scroll_id: scroll['_scroll_id'], scroll: '5m') and not scroll['hits']['hits'].empty?
       yield scroll
     end
   end
 
-  def self.get_tab(offset: offset, doc_id: doc_id, parent: parent, type: type)
+  def get_tab(offset: 0, doc_id: 0, parent: nil, type: nil)
     es_query = EsQuery.new(offset: offset)
     formatted es_query.all_childrens_query(doc_id, parent, type)
   end
 
-  def self.get_headers(index: index, type: type)
+  def get_headers(index: nil, type: nil)
     es_mapping = EsMapping.new(index, es_type: type)
     es_mapping.fields
   end
 
-  def self.search(offset: offset, query: query)
+  def search(offset: nil, query: nil)
     es_query=EsQuery.new(offset: offset)
-    formatted es_query.search_query(query)
+    formatted(es_query.search_query(query), offset: offset)
   end
 
-  def self.formatted(response, fields: [])
-    SearchResultFacade.new(response, fields: fields)
+  def formatted(response, fields: [], offset: nil)
+    SearchResultFacade.new(response, fields: fields, offset: offset )
   end
 
 end

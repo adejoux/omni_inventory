@@ -8,12 +8,12 @@ class DocumentsController < ApplicationController
   end
 
   def load_tab
-    @tab = QueryBuilder.get_tab(offset: offset,
+    @tab = QueryBuilder.new.get_tab(offset: offset,
                                     doc_id: params[:id],
                                     parent: params[:parent],
                                     type: params[:type])
 
-    @headers = QueryBuilder.get_headers(index: params[:index],
+    @headers = QueryBuilder.new.get_headers(index: params[:index],
                                         type: params[:type])
 
 

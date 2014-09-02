@@ -19,7 +19,7 @@ class SearchResultFacade
   end
 
   def paginated_results
-    Kaminari.paginate_array(@response.hits.hits, limit: @limit, offset: @offset, total_count: total_hits)
+    PaginatedArray.new(@response.hits.hits, limit: @limit, offset: @offset, total_count: total_hits)
   end
 
   def results

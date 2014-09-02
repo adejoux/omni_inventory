@@ -16,35 +16,19 @@
   - @search.results.each do |doc|
     .row
       .col-md-8.col-md-offset-1
-        - if doc['fields'].present? and @parents[ doc['fields']['_parent'] ].present?
-          = link_to document_path( get_doc_id(doc) ) do
-            %h2
-              - @parents[ doc['fields']['_parent'] ].each do |key, value|
-                = key
-                %b= value.first
-          .description
-            %b category :
-            = doc['_index']
-            %b type :
-            = doc['_type']
-          %h3
-            field
-            %b=doc.highlight.first[0]
-            match:
-            %b=doc.highlight.first[1].first
-
-        - else
-          = link_to document_path( get_doc_id(doc) ) do
-            %h3
-              field
-              %b=doc.highlight.first[0]
-              match:
-              %b=doc.highlight.first[1].first
-          .description
-            %b category :
-            = doc['_index']
-            %b type :
-            = doc['_type']
+        = link_to document_path( get_doc_id(doc) ) do
+          %h2
+            = result_title(doc)
+        .description
+          %b category :
+          = doc['_index']
+          %b type :
+          = doc['_type']
+        %h3
+          field
+          %b=doc.highlight.first[0]
+          match:
+          %b=doc.highlight.first[1].first
   .row
     .col-md-8.col-md-offset-1
       = paginate @search.results
