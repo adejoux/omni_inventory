@@ -5,11 +5,11 @@ class ReportBuilder
     set_search(query)
 
     if @scan
-      @scroll =  QueryBuilder.new.report(type: report.main_type,
+      @scroll =  QueryBuilder.report(type: report.main_type,
                                    fields: report.main_type_array,
                                    query: search_criterias)
     else
-      @search = QueryBuilder.new.paginated_report(offset: offset,
+      @search = QueryBuilder.paginated_report(offset: offset,
                                                type: report.main_type,
                                                fields: report.main_type_array,
                                                query: search_criterias)
@@ -25,7 +25,7 @@ class ReportBuilder
   end
 
   def get_parent_results
-    parent_search = QueryBuilder.new.fields_by_ids(fields: @report.parent_type_array, ids: @search.parent_list)
+    parent_search = QueryBuilder.fields_by_ids(fields: @report.parent_type_array, ids: @search.parent_list)
     parent_search.json_results
   end
 
@@ -44,7 +44,7 @@ class ReportBuilder
 
   def each_data
     return unless @scroll
-    QueryBuilder.new.scrolling(@scroll) do |response|
+    QueryBuilder.scrolling(@scroll) do |response|
       @search = SearchResultFacade.new((Hashie::Mash.new response), fields: @report.main_type_array, limit: false)
       @main_results=nil
       @parent_results=nil

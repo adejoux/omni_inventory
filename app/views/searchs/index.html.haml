@@ -24,11 +24,11 @@
           = doc['_index']
           %b type :
           = doc['_type']
-        %h3
-          field
-          %b=doc.highlight.first[0]
-          match:
-          %b=doc.highlight.first[1].first
+
+        field
+        %b=doc.highlight.first[0]
+        match:
+        %b=doc.highlight.first[1].first
   .row
     .col-md-8.col-md-offset-1
       = paginate @search.results

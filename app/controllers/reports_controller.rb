@@ -54,10 +54,6 @@ class ReportsController < ApplicationController
     params.require(:report).permit(:name, :main_type, :main_type_fields, :parent_type, :parent_type_fields)
   end
 
-  def offset
-    (page - 1) * per_page
-  end
-
   def build_search
     search = {}
     params.select do |key, value|
