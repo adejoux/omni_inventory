@@ -14,7 +14,7 @@ module SearchsHelper
       else
         primary_fields = YAML.load(ENV['PRIMARY_FIELDS']).map { |field| field }
         primary_fields.each do |field|
-          res << "#{field} #{doc['fields'][field].first} "
+          res << "#{field} #{doc['fields'][field].first} " if doc['fields'][field]
         end
       end
     end

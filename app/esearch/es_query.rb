@@ -3,7 +3,7 @@ class EsQuery
   include EsQueryTemplate
 
   def  initialize(fields: [], offset: 0, size: 20, type: nil, scan: false)
-    @client = Elasticsearch::Client.new
+    @client = Elasticsearch::Client.new log: true
     @size = size
     @fields = fields
     @offset = offset
@@ -53,8 +53,14 @@ class EsQuery
 
   def search_query(search)
 
+    elems = []
+    search.split.each do |elem|
+      elems << EsQueryTemplate.search_elem(elem)
+    end
+
+    @body = EsQueryTemplate.search elems
+
     primary_fields = YAML.load(ENV['PRIMARY_FIELDS']).map { |field| field }
-    @body = EsQueryTemplate.search search
     fields(['_parent'] + primary_fields).perform_query
   end
 

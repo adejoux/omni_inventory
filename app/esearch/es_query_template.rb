@@ -50,17 +50,24 @@ module EsQueryTemplate
       }
     end
 
-    def search(search)
+    def search(elems)
       {
         query: {
-          match: {
-            _all: {
-              query: search,
-              operator: 'and'
-            }
+          bool: {
+            must: elems
           }
         },
         highlight: highlight_section
+      }
+    end
+
+    def search_elem(elem)
+      {
+        match: {
+          _all: {
+            query: elem
+          }
+        }
       }
     end
 
