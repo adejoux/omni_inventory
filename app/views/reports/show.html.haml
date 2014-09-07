@@ -1,6 +1,7 @@
 .row
   .col-md-12
     %h1="report #{@report.name}"
+    %btn.btn.btn-default#form export
     %table{ :id => "report_table", :class => "table table-striped table-bordered", :data => { :source => "#{ report_url(format: "json") }" } }
       %thead
         %tr

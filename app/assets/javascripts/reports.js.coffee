@@ -1,18 +1,27 @@
 ready =->
-  dTable = $('#report_table').dataTable(
+  # Setup - add a text input to each footer cell
+  $("#report_table tfoot th").each ->
+    title = $("#report_table thead th").eq($(this).index()).text()
+    $(this).html "<input type=\"text\" placeholder=\"Search " + title + "\" />"
+    return
+  dTable = $('#report_table').DataTable(
     sDom: "<'row'<'col-xs-6'T><'col-xs-6'>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>"
     sPaginationType: "full_numbers"
+    bSort: false
     bProcessing: true
     bServerSide: true
     iDisplayLength: 20
     bFilter: true
-    oTableTools:
-      sSwfPath: "http://localhost:3000/dataTables/extras/swf/copy_csv_xls_pdf.swf"
-    fnRowCallback: (nRow, aData, iDisplayIndex, iDisplayIndexFull) ->
-      if $('#server_report').length
-        $('td:eq(0)', nRow).html( '<a href='+ $(location).attr('href') + '/server_link/'+ aData[0]  + '>' + aData[0] + '</a>' )
     sAjaxSource: $('#report_table').data('source')
-  ).columnFilter()
+  )
+  # Apply the search
+  dTable.columns().eq(0).each (colIdx) ->
+    $("input", dTable.column(colIdx).footer()).on "keyup change", ->
+      dTable.column(colIdx).search(@value).draw()
+  $('body').on 'click', "#form", ->
+    sData = JSON.stringify(dTable.ajax.params())
+    alert( "The following data submitted to the server: \n\n"+sData )
+    return false
   $('.coll').on 'ajax:success', (event,data) ->
     $('#data_fields').html(data.html) if(data.success == true)
     $('.coll').removeClass('active')
@@ -27,6 +36,7 @@ ready =->
     $(this).removeClass("coll_field_selected")
     $('#report_main_type_fields').val(main_field_values)
     $('#report_parent_type_fields').val(parent_field_values)
+
 
 main_field_values =->
    $('.main_fields > .coll_field_selected').map( (i,n) ->
